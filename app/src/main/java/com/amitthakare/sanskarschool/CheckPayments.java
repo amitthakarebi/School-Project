@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -73,14 +74,18 @@ public class CheckPayments extends AppCompatActivity implements AdapterView.OnIt
         paidStudentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(CheckPayments.this, "Paid Student", Toast.LENGTH_SHORT).show();
+                Variables.ListTag = "PaidStudent";
+                Intent intent = new Intent(CheckPayments.this,ListOfStudents.class);
+                startActivity(intent);
             }
         });
 
         remainingStudentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(CheckPayments.this, "Remaining Student", Toast.LENGTH_SHORT).show();
+                Variables.ListTag = "RemainingStudent";
+                Intent intent = new Intent(CheckPayments.this,ListOfStudents.class);
+                startActivity(intent);
             }
         });
 
@@ -90,6 +95,7 @@ public class CheckPayments extends AppCompatActivity implements AdapterView.OnIt
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
         classNameCP = classesCP[position];
+        Variables.ListClass = classesCP[position];
         Toast.makeText(this, classNameCP, Toast.LENGTH_SHORT).show();
 
     }
