@@ -22,7 +22,7 @@ public class AdminDashboard extends AppCompatActivity implements NavigationView.
     NavigationView navigationViewAdmin;
     Toolbar toolbarAdmin;
 
-    private Button checkPaymentBtn;
+    private Button checkPaymentBtn,addPaymentDetailBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +35,7 @@ public class AdminDashboard extends AppCompatActivity implements NavigationView.
 
         //---------General Hooks------------/
         checkPaymentBtn = findViewById(R.id.checkPaymentBtn);
+        addPaymentDetailBtn = findViewById(R.id.addPaymentDetailBtn);
 
         //----------Hooks--------------//
         drawerLayoutAdmin = findViewById(R.id.drawerLayoutAdmin);
@@ -76,6 +77,14 @@ public class AdminDashboard extends AppCompatActivity implements NavigationView.
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(AdminDashboard.this,CheckPayments.class);
+                startActivity(intent);
+            }
+        });
+
+        addPaymentDetailBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AdminDashboard.this,AddPaymentDetail.class);
                 startActivity(intent);
             }
         });

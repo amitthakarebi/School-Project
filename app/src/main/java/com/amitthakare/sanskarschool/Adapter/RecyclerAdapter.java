@@ -22,8 +22,14 @@ public class RecyclerAdapter extends FirebaseRecyclerAdapter<ModelList, Recycler
     @Override
     protected void onBindViewHolder(@NonNull MyViewHolder holder, int position, @NonNull ModelList model) {
         String subject = model.getSub();
-        subject = subject.replace("[","");
-        subject = subject.replace("]","");
+        if (subject!=null) {
+            if (subject.startsWith("["))
+            {
+                subject = subject.replace("[","");
+                subject = subject.replace("]","");
+            }
+        }
+
 
         holder.name.setText("Student Name : "+model.getName());
         holder.subject.setText("Subjects : "+subject);
