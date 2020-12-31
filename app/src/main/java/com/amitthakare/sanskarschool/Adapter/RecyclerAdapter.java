@@ -31,11 +31,11 @@ public class RecyclerAdapter extends FirebaseRecyclerAdapter<ModelList, Recycler
         }
 
 
-        holder.name.setText("Student Name : "+model.getName());
-        holder.subject.setText("Subjects : "+subject);
-        holder.amount.setText("Amount Paid : "+model.getAmount());
-        holder.date.setText("Date Of Payment : "+model.getDate());
-        holder.note.setText("Transaction Note : "+model.getTransactionNote());
+        holder.name.setText(model.getName());
+        holder.subject.setText(subject);
+        holder.amount.setText(model.getAmount());
+        holder.date.setText(model.getDate());
+        holder.note.setText(model.getTransactionNote());
     }
 
     @NonNull
