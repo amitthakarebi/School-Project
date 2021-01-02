@@ -3,6 +3,7 @@ package com.amitthakare.sanskarschool;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -13,6 +14,8 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -24,7 +27,10 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -56,6 +62,14 @@ public class UpiPayment extends AppCompatActivity {
     //Database values variable
     String className,studName;
 
+    String uid;
+    boolean isAlreadyPresent = false;
+    int i=0;
+
+    //Alert Dialogue
+    private AlertDialog.Builder builder;
+    private AlertDialog alertDialog;
+
     Map<String,String> userdata;
     int amt;
 
@@ -69,6 +83,7 @@ public class UpiPayment extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firestore;
     private FirebaseDatabase firebaseDatabase;
+    private String dName,dAmount,dDate,dSub,dTrans;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -397,25 +412,14 @@ public class UpiPayment extends AppCompatActivity {
 
         if (RESULT_OK == resultCode && STATUS.equals("SUCCESS"))
         {
-            Toast.makeText(UpiPayment.this, "Transaction Successful.", Toast.LENGTH_SHORT).show();
 
-            userdata.put("Name",studName);
-            userdata.put("Sub",subjects.toString());
-            userdata.put("Date",date);
-            userdata.put("Amount",totalAmount+"");
-            firebaseDatabase.getReference("PaidStudent").child(className).child(firebaseAuth.getCurrentUser().getUid()).setValue(userdata)
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful())
-                            {
-                                Toast.makeText(UpiPayment.this, "Success!", Toast.LENGTH_SHORT).show();
-                            }else
-                            {
-                                Toast.makeText(UpiPayment.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
+            // here we need to check if user has already registered any courses and for that we need to check if already present method
+            // after that retrieve date from firebase and store in the variable
+            // after that call to send data to firebase method with all parameters
+            // and if user has not subscribe any subject then it will directly get called to simple method and data will be registered.
+            //Toast.makeText(UpiPayment.this, "Transaction Successful.", Toast.LENGTH_SHORT).show();
+            alertDialog.show();
+           checkAlreadyPresentInFirebase();
 
         }else
         {
@@ -423,4 +427,141 @@ public class UpiPayment extends AppCompatActivity {
         }
 
     }
+
+    private void checkAlreadyPresentInFirebase() {
+
+        firebaseDatabase.getReference("StudentInfo").child(className)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for (DataSnapshot snapshot1 : snapshot.getChildren()) {
+                            if (snapshot1.getValue().toString().equals(studName)) {
+                                isAlreadyPresent = true;
+                                uid = snapshot1.getKey();
+                                Log.e("Presence", "Already Present");
+                                Log.e("Uid", uid);
+                                break;
+                            }
+                        }
+                        if (isAlreadyPresent) {
+                            retrieveDataFromFirebase(uid);
+                        } else {
+                            sendDataToFirebaseDatabase();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+    }
+
+    private void retrieveDataFromFirebase(String uid) {
+
+        firebaseDatabase.getReference("PaidStudent").child(className).child(uid)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for (DataSnapshot snapshot1 : snapshot.getChildren()) {
+                            if (snapshot1.getKey().equals("Name")) {
+                                dName = snapshot1.getValue().toString();
+                                Log.e("Name", dName);
+                            } else if (snapshot1.getKey().equals("Amount")) {
+                                dAmount = snapshot1.getValue().toString();
+                                Log.e("Amount", dAmount);
+                            } else if (snapshot1.getKey().equals("Date")) {
+                                dDate = snapshot1.getValue().toString();
+                                Log.e("Date", dDate);
+                            } else if (snapshot1.getKey().equals("Sub")) {
+                                dSub = snapshot1.getValue().toString();
+                                Log.e("Sub", dSub);
+                            } else if (snapshot1.getKey().equals("TransactionNote")) {
+                                dTrans = snapshot1.getValue().toString();
+                                Log.e("TransactionNote", dTrans);
+                            }
+                        }
+                        if (i==1)
+                        {
+                            i++;
+                            sendDataToFirebaseDatabase(dAmount,dTrans,dSub,dDate,dName);
+                        }
+                    }
+
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+    }
+
+    private void sendDataToFirebaseDatabase(String dAmount, String dTrans, String dSub, String dDate, String dName) {
+
+        userdata.put("Name", upiName.getText().toString());
+        userdata.put("Sub", "[" + dSub + ", " + subjects.toString() + "]");
+        userdata.put("Date", dDate + ", " + date);
+        userdata.put("Amount", dAmount + ", " + upiAmount.getText().toString());
+        userdata.put("TransactionNote", dTrans + ", " + upiTransactionNote.getText().toString());
+        firebaseDatabase.getReference("PaidStudent").child(className).child(uid).setValue(userdata)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Log.e("WithArgument :", userdata.toString());
+                            Toast.makeText(UpiPayment.this, "Success!", Toast.LENGTH_SHORT).show();
+                            msg.setText("Successfully Added!");
+                            msg.setVisibility(View.VISIBLE);
+                            alertDialog.cancel();
+                            finish();
+                        } else {
+                            Toast.makeText(UpiPayment.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            msg.setText("Error : " + task.getException().getMessage());
+                            msg.setVisibility(View.VISIBLE);
+                            alertDialog.cancel();
+                        }
+                    }
+                });
+    }
+
+    private void sendDataToFirebaseDatabase() {
+        userdata.put("Name", upiName.getText().toString());
+        userdata.put("Sub", "[" + subjects.toString() + "]");
+        userdata.put("Date", date);
+        userdata.put("Amount", upiAmount.getText().toString());
+        userdata.put("TransactionNote", upiTransactionNote.getText().toString());
+        firebaseDatabase.getReference("PaidStudent").child(className).child(firebaseAuth.getCurrentUser().getUid()).setValue(userdata)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Log.e("withoutArgument :", userdata.toString());
+                            Toast.makeText(UpiPayment.this, "Success!", Toast.LENGTH_SHORT).show();
+                            msg.setText("Successfully Added!");
+                            msg.setVisibility(View.VISIBLE);
+                            alertDialog.cancel();
+                            finish();
+                        } else {
+                            Toast.makeText(UpiPayment.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            msg.setText("Error : " + task.getException().getMessage());
+                            msg.setVisibility(View.VISIBLE);
+                            alertDialog.cancel();
+                        }
+                    }
+                });
+    }
+
+    private void createBuilder() {
+
+        builder = new AlertDialog.Builder(this);
+        builder.setIcon(R.drawable.student_logo);
+        builder.setTitle("Adding Details...");
+        builder.setCancelable(false);
+        LayoutInflater layoutInflater = getLayoutInflater();
+        View dialogView = layoutInflater.inflate(R.layout.loading_layout, null);
+        builder.setView(dialogView);
+        alertDialog = builder.create();
+
+    }
+
 }

@@ -118,7 +118,7 @@ public class AddPaymentDetail extends AppCompatActivity implements AdapterView.O
         addDetailBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //alertDialog.show();
+                alertDialog.show();
                 if (!classNameAddPayment.equals("No")) {
                     if (!TextUtils.isEmpty(addDetailName.getText().toString())) {
                         if (!TextUtils.isEmpty(addDetailAmount.getText().toString())) {
