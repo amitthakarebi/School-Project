@@ -32,7 +32,7 @@ public class StudentDashboard extends AppCompatActivity implements NavigationVie
     NavigationView navigationViewStudent;
     Toolbar toolbarStudent;
 
-    CardView payfees;
+    CardView payfees,addreceipt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +89,15 @@ public class StudentDashboard extends AppCompatActivity implements NavigationVie
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(StudentDashboard.this,PayFees.class);
+                startActivity(intent);
+            }
+        });
+
+        addreceipt = findViewById(R.id.addReceiptCardView);
+        addreceipt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(StudentDashboard.this,AddReceipt.class);
                 startActivity(intent);
             }
         });
