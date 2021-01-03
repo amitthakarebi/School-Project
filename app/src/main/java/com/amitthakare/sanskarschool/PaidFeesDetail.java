@@ -4,9 +4,17 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.view.View;
+
+import com.amitthakare.sanskarschool.Adapter.RecyclerAdapter;
+import com.amitthakare.sanskarschool.Model.ModelList;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Objects;
 
@@ -15,8 +23,10 @@ public class PaidFeesDetail extends AppCompatActivity {
     DrawerLayout drawerLayoutPaidFeesDetail;
     Toolbar toolbarPaidFeesDetail;
 
+    RecyclerView recyclerViewPFD;
+    RecyclerAdapter adapterPFD;
 
-
+    FirebaseAuth auth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,6 +36,11 @@ public class PaidFeesDetail extends AppCompatActivity {
     }
 
     private void ini() {
+
+        recyclerViewPFD = findViewById(R.id.paidfeesdetailRecyclerView);
+        recyclerViewPFD.setLayoutManager(new LinearLayoutManager(this));
+        auth = FirebaseAuth.getInstance();
+
 
         //------------Hooks-------------//
         drawerLayoutPaidFeesDetail = findViewById(R.id.drawerLayoutPaidFeesDetail);
@@ -50,5 +65,26 @@ public class PaidFeesDetail extends AppCompatActivity {
         //drawerLayoutStudent.addDrawerListener(toggle);
         toggle.syncState();
 
+        FirebaseRecyclerOptions<ModelList> options =
+                new FirebaseRecyclerOptions.Builder<ModelList>()
+                        .setQuery(FirebaseDatabase.getInstance().getReference().child("PaidStudent").child("1st STD"), ModelList.class)
+                        .build();
+
+        adapterPFD = new RecyclerAdapter(options);
+        recyclerViewPFD.setAdapter(adapterPFD);
+
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        adapterPFD.startListening();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        adapterPFD.stopListening();
     }
 }
