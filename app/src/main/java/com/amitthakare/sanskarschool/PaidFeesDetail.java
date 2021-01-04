@@ -67,7 +67,7 @@ public class PaidFeesDetail extends AppCompatActivity {
 
         FirebaseRecyclerOptions<ModelList> options =
                 new FirebaseRecyclerOptions.Builder<ModelList>()
-                        .setQuery(FirebaseDatabase.getInstance().getReference().child("PaidStudent").child("1st STD"), ModelList.class)
+                        .setQuery(FirebaseDatabase.getInstance().getReference().child("PaidStudent").child(FirebaseAuth.getInstance().getCurrentUser().getUid()), ModelList.class)
                         .build();
 
         adapterPFD = new RecyclerAdapter(options);

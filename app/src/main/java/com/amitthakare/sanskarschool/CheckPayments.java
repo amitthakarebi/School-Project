@@ -74,7 +74,7 @@ public class CheckPayments extends AppCompatActivity implements AdapterView.OnIt
         paidStudentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Variables.ListTag = "PaidStudent";
+                Variables.ListTag = "AdminPaidStudent";
                 Intent intent = new Intent(CheckPayments.this,ListOfStudents.class);
                 startActivity(intent);
             }

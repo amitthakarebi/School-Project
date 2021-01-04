@@ -33,6 +33,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
@@ -61,7 +62,7 @@ public class AddPaymentDetail extends AppCompatActivity implements AdapterView.O
     private String dName = "", dAmount = "", dDate = "", dSub = "", dTrans = "";
     private String uid = "";
 
-    int i=1;
+    int i = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -197,7 +198,8 @@ public class AddPaymentDetail extends AppCompatActivity implements AdapterView.O
                             }
                         }
                         if (alreadyPresent) {
-                            retrieveDataFromFirebase(uid);
+                            sendDataToFirebaseDatabase1(uid);
+                            alreadyPresent=false;
                         } else {
                             sendDataToFirebaseDatabase();
                         }
@@ -210,80 +212,19 @@ public class AddPaymentDetail extends AppCompatActivity implements AdapterView.O
                 });
     }
 
-    private void retrieveDataFromFirebase(String uid) {
-
-        firebaseDatabase.getReference("PaidStudent").child(classNameAddPayment).child(uid)
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for (DataSnapshot snapshot1 : snapshot.getChildren()) {
-                            if (snapshot1.getKey().equals("Name")) {
-                                dName = snapshot1.getValue().toString();
-                                Log.e("Name", dName);
-                            } else if (snapshot1.getKey().equals("Amount")) {
-                                dAmount = snapshot1.getValue().toString();
-                                Log.e("Amount", dAmount);
-                            } else if (snapshot1.getKey().equals("Date")) {
-                                dDate = snapshot1.getValue().toString();
-                                Log.e("Date", dDate);
-                            } else if (snapshot1.getKey().equals("Sub")) {
-                                dSub = snapshot1.getValue().toString();
-                                Log.e("Sub", dSub);
-                            } else if (snapshot1.getKey().equals("TransactionNote")) {
-                                dTrans = snapshot1.getValue().toString();
-                                Log.e("TransactionNote", dTrans);
-                            }
-                        }
-                        if (i==1)
-                        {
-                            i++;
-                            sendDataToFirebaseDatabase(dAmount,dTrans,dSub,dDate,dName);
-                        }
-                    }
-
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-    }
-
-    private void sendDataToFirebaseDatabase(String dAmount, String dTrans, String dSub, String dDate, String dName) {
-
-        userdata.put("Name", addDetailName.getText().toString());
-        userdata.put("Sub", "[" + dSub + ", " + addDetailSubject.getText().toString() + "]");
-        userdata.put("Date", dDate + ", " + addDetailDate.getText().toString());
-        userdata.put("Amount", dAmount + ", " + addDetailAmount.getText().toString());
-        userdata.put("TransactionNote", dTrans + ", " + addDetailTransactionNote.getText().toString());
-        firebaseDatabase.getReference("PaidStudent").child(classNameAddPayment).child(uid).setValue(userdata)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Log.e("WithArgument :", userdata.toString());
-                            Toast.makeText(AddPaymentDetail.this, "Success!", Toast.LENGTH_SHORT).show();
-                            successMsg.setText("Successfully Added!");
-                            successMsg.setVisibility(View.VISIBLE);
-                            alertDialog.cancel();
-                            finish();
-                        } else {
-                            Toast.makeText(AddPaymentDetail.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                            successMsg.setText("Error : " + task.getException().getMessage());
-                            successMsg.setVisibility(View.VISIBLE);
-                            alertDialog.cancel();
-                        }
-                    }
-                });
-    }
 
     private void sendDataToFirebaseDatabase() {
+
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMddyyyyHHmmss", Locale.getDefault());
+        final String date1 = dateFormat.format(calendar.getTime());
+
         userdata.put("Name", addDetailName.getText().toString());
         userdata.put("Sub", "[" + addDetailSubject.getText().toString() + "]");
         userdata.put("Date", addDetailDate.getText().toString());
         userdata.put("Amount", addDetailAmount.getText().toString());
         userdata.put("TransactionNote", addDetailTransactionNote.getText().toString());
-        firebaseDatabase.getReference("PaidStudent").child(classNameAddPayment).child(firebaseAuth.getCurrentUser().getUid()).setValue(userdata)
+        firebaseDatabase.getReference("AdminPaidStudent").child(classNameAddPayment).child(date1).setValue(userdata)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
@@ -303,4 +244,52 @@ public class AddPaymentDetail extends AppCompatActivity implements AdapterView.O
                     }
                 });
     }
+
+    private void sendDataToFirebaseDatabase1(String uid) {
+
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMddyyyyHHmmss", Locale.getDefault());
+        ;
+        final String date1 = dateFormat.format(calendar.getTime());
+
+        userdata.put("Name", addDetailName.getText().toString());
+        userdata.put("Sub", "[" + addDetailSubject.getText().toString() + "]");
+        userdata.put("Date", addDetailDate.getText().toString());
+        userdata.put("Amount", addDetailAmount.getText().toString());
+        userdata.put("TransactionNote", addDetailTransactionNote.getText().toString());
+        firebaseDatabase.getReference("AdminPaidStudent").child(classNameAddPayment).child(date1).setValue(userdata)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            firebaseDatabase.getReference("PaidStudent").child(firebaseAuth.getCurrentUser().getUid()).child(date1).setValue(userdata)
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                Log.e("withoutArgument :", userdata.toString());
+                                                Toast.makeText(AddPaymentDetail.this, "Success!", Toast.LENGTH_SHORT).show();
+                                                successMsg.setText("Successfully Added!");
+                                                successMsg.setVisibility(View.VISIBLE);
+                                                alertDialog.cancel();
+                                                finish();
+                                            } else {
+                                                Toast.makeText(AddPaymentDetail.this, "Error! Contact Your Teacher.", Toast.LENGTH_SHORT).show();
+                                                successMsg.setText("Error : Contact Your Teacher.");
+                                                successMsg.setVisibility(View.VISIBLE);
+                                                alertDialog.cancel();
+                                            }
+                                        }
+                                    });
+                        } else {
+                            Toast.makeText(AddPaymentDetail.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            successMsg.setText("Error : " + task.getException().getMessage());
+                            successMsg.setVisibility(View.VISIBLE);
+                            alertDialog.cancel();
+                        }
+                    }
+                });
+    }
+
+
 }
