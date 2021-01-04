@@ -205,7 +205,7 @@ public class AddReceipt extends AppCompatActivity {
 
 
                         Map<String,String> userData = new HashMap<>();
-                        userData.put("Name","Amit Thakare");
+                        userData.put("Name",Variables.STUDENT_NAME);
                         userData.put("Img",imageUploadUri);
                         FirebaseDatabase.getInstance().getReference("ViewReceipt").push().setValue(userData)
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {

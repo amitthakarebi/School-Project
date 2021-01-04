@@ -1,6 +1,7 @@
 package com.amitthakare.sanskarschool;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -17,6 +18,10 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.Objects;
 
@@ -74,10 +79,7 @@ public class Login extends AppCompatActivity {
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful())
                                 {
-                                    Intent intent = new Intent(Login.this,StudentDashboard.class);
-                                    startActivity(intent);
-                                    alertDialog.cancel();
-                                    finish();
+                                    getUserData();
                                 }else
                                 {
                                     Toast.makeText(Login.this, Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT).show();
@@ -99,6 +101,32 @@ public class Login extends AppCompatActivity {
         View dialogView = layoutInflater.inflate(R.layout.loading_layout,null);
         builder.setView(dialogView);
         alertDialog = builder.create();
+
+    }
+
+    private void getUserData() {
+
+        FirebaseFirestore.getInstance().collection("StudentInfo").document(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                        if (value!=null)
+                        {
+                            Variables.STUDENT_NAME = value.get("FullName").toString();
+                            Variables.EMAIL_ID = value.get("EmailId").toString();
+                            Variables.CLASS = value.get("Class").toString();
+                            Variables.MOBILE = value.get("MobileNo").toString();
+                            Intent intent = new Intent(Login.this,StudentDashboard.class);
+                            startActivity(intent);
+                            alertDialog.cancel();
+                            finish();
+                        }else
+                        {
+                            Toast.makeText(Login.this, "No Data!", Toast.LENGTH_SHORT).show();
+                            alertDialog.cancel();
+                        }
+                    }
+                });
 
     }
 

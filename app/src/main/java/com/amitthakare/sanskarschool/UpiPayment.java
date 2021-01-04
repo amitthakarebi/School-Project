@@ -92,22 +92,10 @@ public class UpiPayment extends AppCompatActivity {
         setContentView(R.layout.activity_upi_payment);
         createBuilder();
         ini();
-        getFirebaseData();
-    }
 
-    private void getFirebaseData() {
-        firestore.collection("StudentInfo").document(firebaseAuth.getCurrentUser().getUid())
-                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                        if (value!=null)
-                        {
-                            studName = value.get("FullName").toString();
-                            className = value.get("Class").toString();
-                            upiName.setText(studName);
-                        }
-                    }
-                });
+        studName = Variables.STUDENT_NAME;
+        className = Variables.CLASS;
+        upiName.setText(studName);
     }
 
     private void ini() {
