@@ -18,6 +18,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".ViewReceipts"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
             android:name=".PaidFeesDetail"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
