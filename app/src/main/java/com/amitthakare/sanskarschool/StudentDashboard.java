@@ -198,7 +198,8 @@ public class StudentDashboard extends AppCompatActivity implements NavigationVie
             case R.id.nav_home :
                 break;
             case R.id.nav_update_class :
-                Toast.makeText(this, "Update Class", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(StudentDashboard.this,UpdateClass.class);
+                startActivity(intent);
                 break;
             case R.id.nav_about:
                 Toast.makeText(this, "Nav Update", Toast.LENGTH_SHORT).show();

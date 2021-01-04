@@ -13,5 +13,6 @@ public class Variables {
     public static String EMAIL_ID = "No";
     public static String CLASS = "No";
     public static String MOBILE = "No";
+    public static String GENDER = "No";
 
 }

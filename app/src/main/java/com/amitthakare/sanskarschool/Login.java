@@ -116,6 +116,7 @@ public class Login extends AppCompatActivity {
                             Variables.EMAIL_ID = value.get("EmailId").toString();
                             Variables.CLASS = value.get("Class").toString();
                             Variables.MOBILE = value.get("MobileNo").toString();
+                            Variables.GENDER = value.get("Gender").toString();
                             Intent intent = new Intent(Login.this,StudentDashboard.class);
                             startActivity(intent);
                             alertDialog.cancel();
