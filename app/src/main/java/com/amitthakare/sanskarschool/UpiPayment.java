@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.telephony.SmsManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -447,6 +448,7 @@ public class UpiPayment extends AppCompatActivity {
                                             {
                                                 Log.e("withoutArgument :", userdata.toString());
                                                 Toast.makeText(UpiPayment.this, "Success!", Toast.LENGTH_SHORT).show();
+                                                sendSmS(upiName.getText().toString(),subjects.toString(),date,upiAmount.getText().toString());
                                                 msg.setText("Successfully Added!");
                                                 msg.setVisibility(View.VISIBLE);
                                                 alertDialog.cancel();
@@ -470,6 +472,24 @@ public class UpiPayment extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+    private void sendSmS(String name, String subject, String date, String amount) {
+
+        if (subject!=null) {
+            if (subject.startsWith("["))
+            {
+                subject = subject.replace("[","");
+                subject = subject.replace("]","");
+            }
+        }
+
+        String Msg = "Student Name : "+name+"\nSubjects : "+subject+"\nDate : "+date+"\nAmount : "+amount;
+        Toast.makeText(this, Msg, Toast.LENGTH_SHORT).show();
+
+        SmsManager smsManager = SmsManager.getDefault();
+        smsManager.sendTextMessage("+917767987378",null,Msg,null,null);
+
     }
 
     private void createBuilder() {
