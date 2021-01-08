@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:id="@+id/drawerLayoutAddNewFeesData"
+    android:layout_height="match_parent"
+    tools:context=".AddNewFeesData">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/navigationToolbarAddNewFeesData"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:navigationIcon="@drawable/ic_baseline_keyboard_backspace_24"
+            android:background="@color/blue1"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="?attr/actionBarTheme" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginEnd="15dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Select New Class : "
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/addNewFeesDataSpinner"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/anfdEnglish"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="Amount For English"
+                android:inputType="textEmailAddress"
+                android:drawableStart="@drawable/ic_baseline_attach_money_24"
+                android:drawablePadding="10dp"
+                android:textSize="20sp"
+                android:paddingEnd="10dp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/anfdScience"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="Amount For Science"
+                android:inputType="textEmailAddress"
+                android:drawableStart="@drawable/ic_baseline_attach_money_24"
+                android:drawablePadding="10dp"
+                android:textSize="20sp"
+                android:paddingEnd="10dp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/anfdMathematics"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="Amount For Mathematics"
+                android:inputType="textEmailAddress"
+                android:drawableStart="@drawable/ic_baseline_attach_money_24"
+                android:drawablePadding="10dp"
+                android:textSize="20sp"
+                android:paddingEnd="10dp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/updateFeesDataBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:background="@drawable/btn_background"
+            android:text="Update Fees Data"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
+
+    </LinearLayout>
+
+
+</androidx.drawerlayout.widget.DrawerLayout>

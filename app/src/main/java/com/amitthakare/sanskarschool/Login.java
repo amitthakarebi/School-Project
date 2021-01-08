@@ -21,6 +21,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -128,10 +129,26 @@ public class Login extends AppCompatActivity {
                             Variables.CLASS = value.get("Class").toString();
                             Variables.MOBILE = value.get("MobileNo").toString();
                             Variables.GENDER = value.get("Gender").toString();
-                            Intent intent = new Intent(Login.this,StudentDashboard.class);
-                            startActivity(intent);
-                            alertDialog.cancel();
-                            finish();
+
+                            FirebaseFirestore.getInstance().collection("FeesData").document(Variables.CLASS).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                                @Override
+                                public void onEvent(@Nullable DocumentSnapshot value1, @Nullable FirebaseFirestoreException error) {
+                                    if (value1!=null)
+                                    {
+                                        Variables.English_Fees = value1.getString("English");
+                                        Variables.Science_Fees = value1.getString("Science");
+                                        Variables.Mathematics_Fees = value1.getString("Mathematics");
+                                        Intent intent = new Intent(Login.this,StudentDashboard.class);
+                                        startActivity(intent);
+                                        alertDialog.cancel();
+                                        finish();
+                                    }else
+                                    {
+                                        Toast.makeText(Login.this, "No Fees Data!", Toast.LENGTH_SHORT).show();
+                                        alertDialog.cancel();
+                                    }
+                                }
+                            });
                         }else
                         {
                             Toast.makeText(Login.this, "No Data!", Toast.LENGTH_SHORT).show();

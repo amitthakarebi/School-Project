@@ -58,9 +58,9 @@ public class AdminLogin extends AppCompatActivity {
                                     {
                                         Intent intent = new Intent(AdminLogin.this,AdminDashboard.class);
                                         startActivity(intent);
-                                        finish();
                                         Toast.makeText(AdminLogin.this, "Successfully Signed In!", Toast.LENGTH_SHORT).show();
                                         alertDialog.cancel();
+                                        finish();
                                     }else
                                     {
                                         Toast.makeText(AdminLogin.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();

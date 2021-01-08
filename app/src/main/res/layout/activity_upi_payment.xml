@@ -56,68 +56,6 @@
                         android:textSize="18sp" />
 
                     <CheckBox
-                        android:id="@+id/marathiCheck"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Marathi"
-                        android:textSize="18sp" />
-
-                    <CheckBox
-                        android:id="@+id/hindiCheck"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Hindi"
-                        android:textSize="18sp" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <CheckBox
-                        android:id="@+id/historyCheck"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="History"
-                        android:textSize="18sp" />
-
-                    <CheckBox
-                        android:id="@+id/physicsCheck"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Physics"
-                        android:textSize="18sp" />
-
-                    <CheckBox
-                        android:id="@+id/chemistryCheck"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Chemistry"
-                        android:textSize="18sp" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <CheckBox
-                        android:id="@+id/sanskrutCheck"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Sanskrut"
-                        android:textSize="18sp" />
-
-                    <CheckBox
                         android:id="@+id/mathCheck"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -133,8 +71,8 @@
                         android:text="Science"
                         android:textSize="18sp" />
 
-
                 </LinearLayout>
+
 
             </LinearLayout>
 
@@ -147,8 +85,8 @@
                 android:layout_marginEnd="15dp"
                 android:background="@drawable/edittext_background"
                 android:clickable="false"
-                android:focusable="false"
                 android:cursorVisible="false"
+                android:focusable="false"
                 android:hint="Full Name"
                 android:paddingStart="20dp"
                 android:paddingEnd="20dp"
@@ -175,9 +113,9 @@
                 android:layout_marginTop="15dp"
                 android:layout_marginEnd="15dp"
                 android:background="@drawable/edittext_background"
-                android:focusable="false"
                 android:clickable="false"
                 android:cursorVisible="false"
+                android:focusable="false"
                 android:hint="Amount"
                 android:paddingStart="20dp"
                 android:paddingEnd="20dp"
@@ -215,6 +153,7 @@
                 android:layout_marginStart="15dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="15dp"
+                android:visibility="invisible"
                 android:text="Success"
                 android:textAlignment="center"
                 android:textColor="@color/green_light"

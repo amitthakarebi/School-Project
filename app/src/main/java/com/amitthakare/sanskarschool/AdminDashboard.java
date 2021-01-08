@@ -7,6 +7,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -14,6 +16,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class AdminDashboard extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -22,7 +25,9 @@ public class AdminDashboard extends AppCompatActivity implements NavigationView.
     NavigationView navigationViewAdmin;
     Toolbar toolbarAdmin;
 
-    private Button checkPaymentBtn,addPaymentDetailBtn,viewReceiptBtn;
+    private FirebaseAuth firebaseAuth;
+
+    private Button checkPaymentBtn,addPaymentDetailBtn,viewReceiptBtn,addNewFeesData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +42,9 @@ public class AdminDashboard extends AppCompatActivity implements NavigationView.
         checkPaymentBtn = findViewById(R.id.checkPaymentBtn);
         addPaymentDetailBtn = findViewById(R.id.addPaymentDetailBtn);
         viewReceiptBtn = findViewById(R.id.viewReceipt);
+        addNewFeesData = findViewById(R.id.addNewFeesData);
+
+        firebaseAuth = FirebaseAuth.getInstance();
 
         //----------Hooks--------------//
         drawerLayoutAdmin = findViewById(R.id.drawerLayoutAdmin);
@@ -98,11 +106,90 @@ public class AdminDashboard extends AppCompatActivity implements NavigationView.
             }
         });
 
+        addNewFeesData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AdminDashboard.this,AddNewFeesData.class);
+                startActivity(intent);
+            }
+        });
+
 
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         return false;
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        // Create the object of
+        // AlertDialog Builder class
+        AlertDialog.Builder builder = new AlertDialog.Builder(AdminDashboard.this);
+        // Set the message show for the Alert time
+        builder.setMessage("Click Yes to Logout!");
+
+        // Set Alert Title
+        builder.setTitle("Do you want to Logout?");
+
+        // Set Cancelable false
+        // for when the user clicks on the outside
+        // the Dialog Box then it will remain show
+        builder.setCancelable(false);
+
+        // Set the positive button with yes name
+        // OnClickListener method is use of
+        // DialogInterface interface.
+
+        builder
+                .setPositiveButton(
+                        "Yes",
+                        new DialogInterface
+                                .OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog,
+                                                int which)
+                            {
+
+                                // When the user click yes button
+                                //finishAffinity();
+                                //finish();
+                                //System.exit(0);
+                                firebaseAuth.signOut();
+                                Intent intent = new Intent(AdminDashboard.this,Login.class);
+                                startActivity(intent);
+                                finish();
+                            }
+                        });
+
+        // Set the Negative button with No name
+        // OnClickListener method is use
+        // of DialogInterface interface.
+        builder
+                .setNegativeButton(
+                        "No",
+                        new DialogInterface
+                                .OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog,
+                                                int which)
+                            {
+
+                                // If user click no
+                                // then dialog box is canceled.
+                                dialog.cancel();
+                            }
+                        });
+
+        // Create the Alert dialog
+        AlertDialog alertDialog = builder.create();
+
+        // Show the Alert Dialog box
+        alertDialog.show();
     }
 }

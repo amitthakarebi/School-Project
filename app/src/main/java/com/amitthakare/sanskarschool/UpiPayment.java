@@ -51,8 +51,9 @@ public class UpiPayment extends AppCompatActivity {
     DrawerLayout drawerLayoutUpi;
     Toolbar toolbarUpi;
 
-    CheckBox englishCheck,marathiCheck,hindiCheck,historyCheck,physicsCheck,chemistryCheck,sanskrutCheck,mathsCheck,scienceCheck;
+    CheckBox englishCheck,mathsCheck,scienceCheck;
     EditText upiAmount,upiName,upiTransactionNote,upiId;
+    int engAmt, sciAmt, mathsAmt;
     Button payNowBtn;
     Calendar calendar;
     SimpleDateFormat simpleDateFormat;
@@ -85,7 +86,6 @@ public class UpiPayment extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firestore;
     private FirebaseDatabase firebaseDatabase;
-    private String dName,dAmount,dDate,dSub,dTrans;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,12 +108,6 @@ public class UpiPayment extends AppCompatActivity {
 
         //---------------General Initialization---------//
         englishCheck = findViewById(R.id.englishCheck);
-        marathiCheck = findViewById(R.id.marathiCheck);
-        hindiCheck = findViewById(R.id.hindiCheck);
-        historyCheck = findViewById(R.id.historyCheck);
-        physicsCheck = findViewById(R.id.physicsCheck);
-        chemistryCheck = findViewById(R.id.chemistryCheck);
-        sanskrutCheck = findViewById(R.id.sanskrutCheck);
         mathsCheck = findViewById(R.id.mathCheck);
         scienceCheck = findViewById(R.id.scienceCheck);
         calendar = Calendar.getInstance();
@@ -163,116 +157,17 @@ public class UpiPayment extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked)
                 {
+                    engAmt = Integer.parseInt(Variables.English_Fees);
                     subjects.add("English");
-                    totalAmount += 1;
+                    totalAmount += engAmt;
                     upiAmount.setText(totalAmount+"");
+                    Toast.makeText(UpiPayment.this, "Rs. "+engAmt+" is added for English subject.", Toast.LENGTH_SHORT).show();
                 }else
                 {
                     subjects.remove("English");
-                    totalAmount-= 1;
+                    totalAmount-= engAmt;
                     upiAmount.setText(totalAmount+"");
-                }
-            }
-        });
-
-        marathiCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked)
-                {
-                    subjects.add("Marathi");
-                    totalAmount += 1;
-                    upiAmount.setText(totalAmount+"");
-                }else
-                {
-                    subjects.remove("Marathi");
-                    totalAmount-= 1;
-                    upiAmount.setText(totalAmount+"");
-                }
-            }
-        });
-
-        hindiCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked)
-                {
-                    subjects.add("Hindi");
-                    totalAmount += 1;
-                    upiAmount.setText(totalAmount+"");
-                }else
-                {
-                    subjects.remove("Hindi");
-                    totalAmount-= 1;
-                    upiAmount.setText(totalAmount+"");
-                }
-            }
-        });
-
-        historyCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked)
-                {
-                    subjects.add("History");
-                    totalAmount += 1;
-                    upiAmount.setText(totalAmount+"");
-                }else
-                {
-                    subjects.remove("History");
-                    totalAmount-= 1;
-                    upiAmount.setText(totalAmount+"");
-                }
-            }
-        });
-
-        physicsCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked)
-                {
-                    subjects.add("Physics");
-                    totalAmount += 1;
-                    upiAmount.setText(totalAmount+"");
-                }else
-                {
-                    subjects.remove("Physics");
-                    totalAmount-= 1;
-                    upiAmount.setText(totalAmount+"");
-                }
-            }
-        });
-
-        chemistryCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked)
-                {
-                    subjects.add("Chemistry");
-                    totalAmount += 1;
-                    upiAmount.setText(totalAmount+"");
-                }else
-                {
-                    subjects.remove("Chemistry");
-                    totalAmount-= 1;
-                    upiAmount.setText(totalAmount+"");
-                }
-            }
-        });
-
-        sanskrutCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked)
-                {
-                    subjects.add("Sanskrut");
-                    totalAmount += 1;
-                    upiAmount.setText(totalAmount+"");
-                }else
-                {
-                    subjects.remove("Sanskrut");
-                    totalAmount-= 1;
-                    upiAmount.setText(totalAmount+"");
+                    Toast.makeText(UpiPayment.this, "Rs. "+engAmt+" is removed for English subject.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -282,14 +177,17 @@ public class UpiPayment extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked)
                 {
+                    mathsAmt = Integer.parseInt(Variables.Mathematics_Fees);
                     subjects.add("Mathematics");
-                    totalAmount += 1;
+                    totalAmount += mathsAmt;
                     upiAmount.setText(totalAmount+"");
+                    Toast.makeText(UpiPayment.this, "Rs. "+mathsAmt+" is added for Mathematics subject.", Toast.LENGTH_SHORT).show();
                 }else
                 {
                     subjects.remove("Mathematics");
-                    totalAmount-= 1;
+                    totalAmount-= mathsAmt;
                     upiAmount.setText(totalAmount+"");
+                    Toast.makeText(UpiPayment.this, "Rs. "+mathsAmt+" is removed for Mathematics subject.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -299,14 +197,17 @@ public class UpiPayment extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked)
                 {
+                    sciAmt = Integer.parseInt(Variables.Science_Fees);
                     subjects.add("Science");
-                    totalAmount += 1;
+                    totalAmount += sciAmt;
                     upiAmount.setText(totalAmount+"");
+                    Toast.makeText(UpiPayment.this, "Rs. "+sciAmt+" is added for Science subject.", Toast.LENGTH_SHORT).show();
                 }else
                 {
                     subjects.remove("Science");
-                    totalAmount-= 1;
+                    totalAmount-= sciAmt;
                     upiAmount.setText(totalAmount+"");
+                    Toast.makeText(UpiPayment.this, "Rs. "+sciAmt+" is removed for Science subject.", Toast.LENGTH_SHORT).show();
                 }
             }
         });

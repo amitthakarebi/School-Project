@@ -15,4 +15,9 @@ public class Variables {
     public static String MOBILE = "No";
     public static String GENDER = "No";
 
+    //Fees Data
+    public static String English_Fees="No";
+    public static String Science_Fees="No";
+    public static String Mathematics_Fees="No";
+
 }
