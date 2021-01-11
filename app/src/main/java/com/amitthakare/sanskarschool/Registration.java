@@ -31,7 +31,7 @@ import java.util.Map;
 
 public class Registration extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
-    private String classes[] = {"1st STD","2nd STD","3rd STD","4th STD","5th STD","6th STD","7th STD","8th STD","9th STD","10th STD"};
+    private String classes[] = {"1st STD", "2nd STD", "3rd STD", "4th STD", "5th STD", "6th STD", "7th STD", "8th STD", "9th STD", "10th STD"};
     private Spinner classSpinner;
     private String className = "No";
     private EditText fullname, email, mobile, password, confirmPassword;
@@ -87,49 +87,39 @@ public class Registration extends AppCompatActivity implements AdapterView.OnIte
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 RadioButton rb = group.findViewById(checkedId);
-                if (rb != null && rb.isChecked())
-                {
+                if (rb != null && rb.isChecked()) {
                     gender = (String) rb.getText();
                 }
             }
         });
 
         //Creating the ArrayAdapter instance having the class list
-        ArrayAdapter aa = new ArrayAdapter(this,android.R.layout.simple_spinner_item,classes);
+        ArrayAdapter aa = new ArrayAdapter(this, android.R.layout.simple_spinner_item, classes);
         aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         //Setting the ArrayAdapter data on the Spinner
         classSpinner.setAdapter(aa);
     }
 
     private void registerUser() {
-
-        if (!TextUtils.isEmpty(fullname.getText()))
-        {
-            if (!TextUtils.isEmpty(email.getText()))
-            {
-                if (!TextUtils.isEmpty(mobile.getText()) && mobile.length() ==10 )
-                {
-                    if (!TextUtils.isEmpty(password.getText()))
-                    {
-                        if (password.getText().toString().equals(confirmPassword.getText().toString()))
-                        {
-                            if (!gender.equals("No"))
-                            {
-                                if (!className.equals("No"))
-                                {
+        if (!TextUtils.isEmpty(fullname.getText())) {
+            if (!TextUtils.isEmpty(email.getText())) {
+                if (!TextUtils.isEmpty(mobile.getText()) && mobile.length() == 10) {
+                    if (!TextUtils.isEmpty(password.getText())) {
+                        if (password.getText().toString().equals(confirmPassword.getText().toString())) {
+                            if (!gender.equals("No")) {
+                                if (!className.equals("No")) {
                                     //send data to firebase with information and create user data
-                                    firebaseAuth.createUserWithEmailAndPassword(email.getText().toString(),password.getText().toString())
+                                    firebaseAuth.createUserWithEmailAndPassword(email.getText().toString(), password.getText().toString())
                                             .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                                                 @Override
                                                 public void onComplete(@NonNull Task<AuthResult> task) {
-                                                    if (task.isSuccessful())
-                                                    {
-                                                        Map<String,Object> userdata = new HashMap<>();
-                                                        userdata.put("FullName",fullname.getText().toString());
-                                                        userdata.put("EmailId",email.getText().toString());
-                                                        userdata.put("MobileNo",mobile.getText().toString());
-                                                        userdata.put("Class",className);
-                                                        userdata.put("Gender",gender);
+                                                    if (task.isSuccessful()) {
+                                                        Map<String, Object> userdata = new HashMap<>();
+                                                        userdata.put("FullName", fullname.getText().toString());
+                                                        userdata.put("EmailId", email.getText().toString());
+                                                        userdata.put("MobileNo", mobile.getText().toString());
+                                                        userdata.put("Class", className);
+                                                        userdata.put("Gender", gender);
 
                                                         firebaseFirestore.collection("StudentInfo")
                                                                 .document(firebaseAuth.getCurrentUser().getUid())
@@ -137,77 +127,78 @@ public class Registration extends AppCompatActivity implements AdapterView.OnIte
                                                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                     @Override
                                                                     public void onComplete(@NonNull Task<Void> task) {
-                                                                        if (task.isSuccessful())
-                                                                        {
+                                                                        if (task.isSuccessful()) {
                                                                             DatabaseReference myRef = realtimeDatabase.getReference("StudentInfo").child(className).child(firebaseAuth.getCurrentUser().getUid());
                                                                             myRef.setValue(fullname.getText().toString())
                                                                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                                         @Override
                                                                                         public void onComplete(@NonNull Task<Void> task) {
-                                                                                            if (task.isSuccessful())
-                                                                                            {
-                                                                                                Toast.makeText(Registration.this, "Successfully Registered!", Toast.LENGTH_SHORT).show();
-                                                                                                alertDialog.cancel();
-                                                                                            }else
-                                                                                            {
-                                                                                                Toast.makeText(Registration.this, "Contact your staff to check details!", Toast.LENGTH_SHORT).show();
+                                                                                            if (task.isSuccessful()) {
+
+                                                                                                FirebaseDatabase.getInstance().getReference("RemainingStudent").child(className)
+                                                                                                        .child(firebaseAuth.getCurrentUser().getUid()).child("Name").setValue(fullname.getText().toString())
+                                                                                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                                                            @Override
+                                                                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                                                                if (task.isSuccessful()) {
+                                                                                                                    Toast.makeText(Registration.this, "Successfully Registered!", Toast.LENGTH_SHORT).show();
+                                                                                                                    alertDialog.cancel();
+                                                                                                                    finish();
+                                                                                                                } else {
+                                                                                                                    Toast.makeText(Registration.this, "Contact your staff to check details! \n Remaining student data is not submitted!", Toast.LENGTH_SHORT).show();
+                                                                                                                    alertDialog.cancel();
+                                                                                                                }
+                                                                                                            }
+                                                                                                        });
+                                                                                            } else {
+                                                                                                Toast.makeText(Registration.this, "Contact your staff to check details! \n Realtime student data is not submitted!", Toast.LENGTH_SHORT).show();
                                                                                                 alertDialog.cancel();
                                                                                             }
                                                                                         }
                                                                                     });
 
-                                                                        }else
-                                                                        {
-                                                                            Toast.makeText(Registration.this, "Contact your staff to check details!", Toast.LENGTH_SHORT).show();
+                                                                        } else {
+                                                                            Toast.makeText(Registration.this, "Contact your staff to check details!\n Student information is not submitted.", Toast.LENGTH_SHORT).show();
                                                                             alertDialog.cancel();
                                                                             //firebaseAuth.getCurrentUser().delete();
                                                                         }
                                                                     }
                                                                 });
-                                                    }else
-                                                    {
+                                                    } else {
                                                         Toast.makeText(Registration.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                                                         alertDialog.cancel();
                                                     }
                                                 }
                                             });
 
-                                }else
-                                {
+                                } else {
                                     Toast.makeText(this, "Select proper class!", Toast.LENGTH_SHORT).show();
                                     alertDialog.cancel();
                                 }
-                            }else
-                            {
+                            } else {
                                 Toast.makeText(this, "Select gender!", Toast.LENGTH_SHORT).show();
                                 alertDialog.cancel();
                             }
-                        }else
-                        {
+                        } else {
                             Toast.makeText(this, "Password not matched!", Toast.LENGTH_SHORT).show();
                             alertDialog.cancel();
                         }
-                    }else
-                    {
+                    } else {
                         Toast.makeText(this, "Enter password!", Toast.LENGTH_SHORT).show();
                         alertDialog.cancel();
                     }
-                }else
-                {
+                } else {
                     Toast.makeText(this, "Enter valid mobile no!", Toast.LENGTH_SHORT).show();
                     alertDialog.cancel();
                 }
-            }else
-            {
+            } else {
                 Toast.makeText(this, "Please enter email!", Toast.LENGTH_SHORT).show();
                 alertDialog.cancel();
             }
-        }else
-        {
+        } else {
             Toast.makeText(this, "Please enter fullname!", Toast.LENGTH_SHORT).show();
             alertDialog.cancel();
         }
-
     }
 
     //below two methods is for class spinner
@@ -228,7 +219,7 @@ public class Registration extends AppCompatActivity implements AdapterView.OnIte
         builder.setTitle("Registering User");
         builder.setCancelable(false);
         LayoutInflater layoutInflater = getLayoutInflater();
-        View dialogView = layoutInflater.inflate(R.layout.loading_layout,null);
+        View dialogView = layoutInflater.inflate(R.layout.loading_layout, null);
         builder.setView(dialogView);
         alertDialog = builder.create();
 

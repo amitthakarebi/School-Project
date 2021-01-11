@@ -347,17 +347,32 @@ public class UpiPayment extends AppCompatActivity {
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful())
                                             {
-                                                Log.e("withoutArgument :", userdata.toString());
-                                                Toast.makeText(UpiPayment.this, "Success!", Toast.LENGTH_SHORT).show();
-                                                sendSmS(upiName.getText().toString(),subjects.toString(),date,upiAmount.getText().toString());
-                                                msg.setText("Successfully Added!");
-                                                msg.setVisibility(View.VISIBLE);
-                                                alertDialog.cancel();
-                                                finish();
+                                                FirebaseDatabase.getInstance().getReference("RemainingStudent").child(className).child(firebaseAuth.getCurrentUser().getUid())
+                                                        .removeValue()
+                                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                if (task.isSuccessful())
+                                                                {
+                                                                    Toast.makeText(UpiPayment.this, "Success!", Toast.LENGTH_SHORT).show();
+                                                                    sendSmS(upiName.getText().toString(),subjects.toString(),date,upiAmount.getText().toString());
+                                                                    msg.setText("Successfully Added!");
+                                                                    msg.setVisibility(View.VISIBLE);
+                                                                    alertDialog.cancel();
+                                                                    finish();
+                                                                }else
+                                                                {
+                                                                    Toast.makeText(UpiPayment.this, "Error! Contact Your Teacher.", Toast.LENGTH_SHORT).show();
+                                                                    msg.setText("Data sent to admin and student but not remove from Remaining Student.");
+                                                                    msg.setVisibility(View.VISIBLE);
+                                                                    alertDialog.cancel();
+                                                                }
+                                                            }
+                                                        });
                                             }else
                                             {
                                                 Toast.makeText(UpiPayment.this, "Error! Contact Your Teacher.", Toast.LENGTH_SHORT).show();
-                                                msg.setText("Error : Contact Your Teacher.");
+                                                msg.setText("Data sent to admin but not to student.");
                                                 msg.setVisibility(View.VISIBLE);
                                                 alertDialog.cancel();
                                             }
