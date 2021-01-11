@@ -1,15 +1,18 @@
 package com.amitthakare.sanskarschool.Adapter;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amitthakare.sanskarschool.Model.ModelList;
 import com.amitthakare.sanskarschool.R;
+import com.amitthakare.sanskarschool.Variables;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 

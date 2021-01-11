@@ -15,35 +15,35 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.SearchView;
 
-import com.amitthakare.sanskarschool.Adapter.RecyclerAdapter;
+import com.amitthakare.sanskarschool.Adapter.RecyclerAdapter2;
 import com.amitthakare.sanskarschool.Model.ModelList;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Objects;
 
-public class ListOfStudents extends AppCompatActivity {
+public class ListOfStudents2 extends AppCompatActivity {
 
     DrawerLayout drawerLayoutListStudent;
     Toolbar toolbarListStudents;
 
     RecyclerView recyclerView;
-    RecyclerAdapter adapter;
+    RecyclerAdapter2 adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_list_of_students);
+        setContentView(R.layout.activity_list_of_students2);
         ini();
     }
 
     private void ini() {
 
-        recyclerView = findViewById(R.id.studentListRecyclerView);
+        recyclerView = findViewById(R.id.studentListRecyclerView2);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        drawerLayoutListStudent = findViewById(R.id.drawerLayoutListStudents);
-        toolbarListStudents = findViewById(R.id.navigationToolbarListStudents);
+        drawerLayoutListStudent = findViewById(R.id.drawerLayoutListStudents2);
+        toolbarListStudents = findViewById(R.id.navigationToolbarListStudents2);
 
         //---------Toolbar---------// set toolbar as action bar
         setSupportActionBar(toolbarListStudents);
@@ -52,7 +52,7 @@ public class ListOfStudents extends AppCompatActivity {
         toolbarListStudents.setTitleTextColor(getResources().getColor(R.color.white));
 
         //--------Navigation Toggle--------//
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(ListOfStudents.this,drawerLayoutListStudent,toolbarListStudents,R.string.open,R.string.close);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(ListOfStudents2.this,drawerLayoutListStudent,toolbarListStudents,R.string.open,R.string.close);
         toggle.setDrawerIndicatorEnabled(false);
         toggle.setHomeAsUpIndicator(R.drawable.ic_baseline_keyboard_backspace_24);
         toggle.setToolbarNavigationClickListener(new View.OnClickListener() {
@@ -66,10 +66,10 @@ public class ListOfStudents extends AppCompatActivity {
 
         FirebaseRecyclerOptions<ModelList> options =
                 new FirebaseRecyclerOptions.Builder<ModelList>()
-                        .setQuery(FirebaseDatabase.getInstance().getReference().child("AdminPaidStudent").child(Variables.ListClass), ModelList.class)
+                        .setQuery(FirebaseDatabase.getInstance().getReference().child("RemainingStudent").child(Variables.ListClass), ModelList.class)
                         .build();
 
-        adapter = new RecyclerAdapter(options);
+        adapter = new RecyclerAdapter2(options);
         recyclerView.setAdapter(adapter);
     }
 
@@ -115,10 +115,10 @@ public class ListOfStudents extends AppCompatActivity {
 
         FirebaseRecyclerOptions<ModelList> options =
                 new FirebaseRecyclerOptions.Builder<ModelList>()
-                        .setQuery(FirebaseDatabase.getInstance().getReference().child("AdminPaidStudent").child(Variables.ListClass).orderByChild("Name").startAt(s).endAt(s+"\uf8ff"), ModelList.class)
+                        .setQuery(FirebaseDatabase.getInstance().getReference().child("RemainingStudent").child(Variables.ListClass).orderByChild("Name").startAt(s).endAt(s+"\uf8ff"), ModelList.class)
                         .build();
 
-        adapter = new RecyclerAdapter(options);
+        adapter = new RecyclerAdapter2(options);
         adapter.startListening();
         recyclerView.setAdapter(adapter);
 

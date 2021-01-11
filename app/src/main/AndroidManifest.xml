@@ -22,6 +22,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".ListOfStudents2"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
             android:name=".AddNewFeesData"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
