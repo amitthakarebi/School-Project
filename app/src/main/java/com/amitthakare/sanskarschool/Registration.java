@@ -135,7 +135,7 @@ public class Registration extends AppCompatActivity implements AdapterView.OnIte
                                                                                         public void onComplete(@NonNull Task<Void> task) {
                                                                                             if (task.isSuccessful()) {
 
-                                                                                                FirebaseDatabase.getInstance().getReference("RemainingStudent").child(className)
+                                                                                                FirebaseDatabase.getInstance().getReference("RemainingStudent").child(Variables.currentMonthString).child(className)
                                                                                                         .child(firebaseAuth.getCurrentUser().getUid()).child("Name").setValue(fullname.getText().toString())
                                                                                                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                                                             @Override

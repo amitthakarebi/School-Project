@@ -335,7 +335,7 @@ public class UpiPayment extends AppCompatActivity {
         userdata.put("Date", date);
         userdata.put("Amount", upiAmount.getText().toString());
         userdata.put("TransactionNote", upiTransactionNote.getText().toString());
-        firebaseDatabase.getReference("AdminPaidStudent").child(className).child(date1).setValue(userdata)
+        firebaseDatabase.getReference("AdminPaidStudent").child(Variables.currentMonthString).child(className).child(date1).setValue(userdata)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
@@ -347,7 +347,7 @@ public class UpiPayment extends AppCompatActivity {
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful())
                                             {
-                                                FirebaseDatabase.getInstance().getReference("RemainingStudent").child(className).child(firebaseAuth.getCurrentUser().getUid())
+                                                FirebaseDatabase.getInstance().getReference("RemainingStudent").child(Variables.currentMonthString).child(className).child(firebaseAuth.getCurrentUser().getUid())
                                                         .removeValue()
                                                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                             @Override

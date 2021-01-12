@@ -66,7 +66,7 @@ public class ListOfStudents2 extends AppCompatActivity {
 
         FirebaseRecyclerOptions<ModelList> options =
                 new FirebaseRecyclerOptions.Builder<ModelList>()
-                        .setQuery(FirebaseDatabase.getInstance().getReference().child("RemainingStudent").child(Variables.ListClass), ModelList.class)
+                        .setQuery(FirebaseDatabase.getInstance().getReference().child("RemainingStudent").child(Variables.ListMonth).child(Variables.ListClass), ModelList.class)
                         .build();
 
         adapter = new RecyclerAdapter2(options);
@@ -115,7 +115,7 @@ public class ListOfStudents2 extends AppCompatActivity {
 
         FirebaseRecyclerOptions<ModelList> options =
                 new FirebaseRecyclerOptions.Builder<ModelList>()
-                        .setQuery(FirebaseDatabase.getInstance().getReference().child("RemainingStudent").child(Variables.ListClass).orderByChild("Name").startAt(s).endAt(s+"\uf8ff"), ModelList.class)
+                        .setQuery(FirebaseDatabase.getInstance().getReference().child("RemainingStudent").child(Variables.ListMonth).child(Variables.ListClass).orderByChild("Name").startAt(s).endAt(s+"\uf8ff"), ModelList.class)
                         .build();
 
         adapter = new RecyclerAdapter2(options);

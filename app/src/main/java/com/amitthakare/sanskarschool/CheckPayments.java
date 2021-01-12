@@ -16,14 +16,16 @@ import android.widget.Toast;
 
 import java.util.Objects;
 
-public class CheckPayments extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class CheckPayments extends AppCompatActivity{
 
     private String classesCP[] = {"1st STD","2nd STD","3rd STD","4th STD","5th STD","6th STD","7th STD","8th STD","9th STD","10th STD"};
     private Spinner classSpinnerCP;
 
+    private String monthsCP[] = {"January","February","March","April","May","June","July","August","September","October","November","December"};
+    private Spinner monthSpinnerCP;
+
     DrawerLayout drawerLayoutCheckPayments;
     Toolbar toolbarCheckPayments;
-    private String classNameCP;
 
     private Button paidStudentBtn, remainingStudentBtn;
 
@@ -63,13 +65,26 @@ public class CheckPayments extends AppCompatActivity implements AdapterView.OnIt
 
         //Getting the instance of Spinner and applying OnItemSelectedListener on it
         classSpinnerCP = findViewById(R.id.classSpinner);
-        classSpinnerCP.setOnItemSelectedListener(this);
 
         //Creating the ArrayAdapter instance having the country list
         ArrayAdapter aa = new ArrayAdapter(this,android.R.layout.simple_spinner_item,classesCP);
         aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         //Setting the ArrayAdapter data on the Spinner
         classSpinnerCP.setAdapter(aa);
+        classSpinnerCP.setOnItemSelectedListener(new ClassNameSpinnerClass());
+
+
+        monthSpinnerCP = findViewById(R.id.monthSpinner);
+        monthSpinnerCP.setOnItemSelectedListener(new MonthSpinnerClass());
+
+        //Creating the ArrayAdapter instance having the country list
+        ArrayAdapter a = new ArrayAdapter(this,android.R.layout.simple_spinner_item,monthsCP);
+        aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        //Setting the ArrayAdapter data on the Spinner
+        monthSpinnerCP.setAdapter(a);
+        int month = Variables.currentMonth - 1;
+        monthSpinnerCP.setSelection(month);
+
 
         paidStudentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,17 +104,34 @@ public class CheckPayments extends AppCompatActivity implements AdapterView.OnIt
 
     }
 
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+    class ClassNameSpinnerClass implements AdapterView.OnItemSelectedListener
+    {
 
-        classNameCP = classesCP[position];
-        Variables.ListClass = classesCP[position];
-        Toast.makeText(this, classNameCP, Toast.LENGTH_SHORT).show();
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
+            Variables.ListClass = classesCP[position];
+            Toast.makeText(CheckPayments.this, Variables.ListClass, Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) {
+
+        }
     }
 
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
+    class MonthSpinnerClass implements AdapterView.OnItemSelectedListener
+    {
 
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            Variables.ListMonth = monthsCP[position];
+            Toast.makeText(CheckPayments.this, Variables.ListMonth, Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) {
+
+        }
     }
 }

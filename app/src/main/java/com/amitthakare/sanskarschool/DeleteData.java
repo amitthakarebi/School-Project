@@ -20,7 +20,7 @@ public class DeleteData extends AppCompatActivity {
 
     DrawerLayout drawerLayoutDeleteData;
     Toolbar toolbarDeleteData;
-    
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

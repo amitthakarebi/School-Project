@@ -4,8 +4,11 @@ public class Variables {
 
     public static String userClass ="No";
 
-    public static String ListTag = "No";
     public static String ListClass = "No";
+
+    public static String currentMonthString = "No";
+    public static int currentMonth=0;
+    public static String ListMonth = "No";
 
 
     //Student Data

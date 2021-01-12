@@ -27,6 +27,8 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Objects;
 
 public class Login extends AppCompatActivity {
@@ -39,6 +41,9 @@ public class Login extends AppCompatActivity {
 
     //database variables
     private FirebaseAuth firebaseAuth;
+    private Calendar calendar;
+    private SimpleDateFormat simpleDateFormat;
+    private String date;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +51,58 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         createBuilder();
         ini();
+        getCurrentMonth();
         askAllPermission();
+    }
+
+    private void getCurrentMonth() {
+
+        calendar = Calendar.getInstance();
+        simpleDateFormat = new SimpleDateFormat("MM");
+        date = simpleDateFormat.format(calendar.getTime());
+
+        Variables.currentMonth = Integer.parseInt(date);
+
+        switch (date)
+        {
+            case "01":
+                Variables.currentMonthString = "January";
+                break;
+            case "02":
+                Variables.currentMonthString = "February";
+                break;
+            case "03":
+                Variables.currentMonthString = "March";
+                break;
+            case "04":
+                Variables.currentMonthString = "April";
+                break;
+            case "05":
+                Variables.currentMonthString = "May";
+                break;
+            case "06":
+                Variables.currentMonthString = "June";
+                break;
+            case "07":
+                Variables.currentMonthString = "July";
+                break;
+            case "08":
+                Variables.currentMonthString = "August";
+                break;
+            case "09":
+                Variables.currentMonthString = "September";
+                break;
+            case "10":
+                Variables.currentMonthString = "October";
+                break;
+            case "11":
+                Variables.currentMonthString = "November";
+                break;
+            case "12":
+                Variables.currentMonthString = "December";
+                break;
+        }
+
     }
 
     private void askAllPermission() {

@@ -199,7 +199,7 @@ public class AddPaymentDetail extends AppCompatActivity implements AdapterView.O
                         }
                         if (alreadyPresent) {
                             sendDataToFirebaseDatabase1(uid);
-                            alreadyPresent=false;
+                            alreadyPresent = false;
                         } else {
                             sendDataToFirebaseDatabase();
                         }
@@ -224,7 +224,7 @@ public class AddPaymentDetail extends AppCompatActivity implements AdapterView.O
         userdata.put("Date", addDetailDate.getText().toString());
         userdata.put("Amount", addDetailAmount.getText().toString());
         userdata.put("TransactionNote", addDetailTransactionNote.getText().toString());
-        firebaseDatabase.getReference("AdminPaidStudent").child(classNameAddPayment).child(date1).setValue(userdata)
+        firebaseDatabase.getReference("AdminPaidStudent").child(Variables.currentMonthString).child(classNameAddPayment).child(date1).setValue(userdata)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
@@ -245,11 +245,10 @@ public class AddPaymentDetail extends AppCompatActivity implements AdapterView.O
                 });
     }
 
-    private void sendDataToFirebaseDatabase1(String uid) {
+    private void sendDataToFirebaseDatabase1(final String uid) {
 
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat dateFormat = new SimpleDateFormat("MMddyyyyHHmmss", Locale.getDefault());
-        ;
         final String date1 = dateFormat.format(calendar.getTime());
 
         userdata.put("Name", addDetailName.getText().toString());
@@ -257,22 +256,38 @@ public class AddPaymentDetail extends AppCompatActivity implements AdapterView.O
         userdata.put("Date", addDetailDate.getText().toString());
         userdata.put("Amount", addDetailAmount.getText().toString());
         userdata.put("TransactionNote", addDetailTransactionNote.getText().toString());
-        firebaseDatabase.getReference("AdminPaidStudent").child(classNameAddPayment).child(date1).setValue(userdata)
+        firebaseDatabase.getReference("AdminPaidStudent").child(Variables.currentMonthString).child(classNameAddPayment).child(date1).setValue(userdata)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            firebaseDatabase.getReference("PaidStudent").child(firebaseAuth.getCurrentUser().getUid()).child(date1).setValue(userdata)
+                            firebaseDatabase.getReference("PaidStudent").child(uid).child(date1).setValue(userdata)
                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful()) {
-                                                Log.e("withoutArgument :", userdata.toString());
-                                                Toast.makeText(AddPaymentDetail.this, "Success!", Toast.LENGTH_SHORT).show();
-                                                successMsg.setText("Successfully Added!");
-                                                successMsg.setVisibility(View.VISIBLE);
-                                                alertDialog.cancel();
-                                                finish();
+
+                                                FirebaseDatabase.getInstance().getReference("RemainingStudent").child(Variables.currentMonthString).child(classNameAddPayment).child(uid)
+                                                        .removeValue()
+                                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                if (task.isSuccessful()) {
+                                                                    Log.e("withoutArgument :", userdata.toString());
+                                                                    Toast.makeText(AddPaymentDetail.this, "Success!", Toast.LENGTH_SHORT).show();
+                                                                    successMsg.setText("Successfully Added!");
+                                                                    successMsg.setVisibility(View.VISIBLE);
+                                                                    alertDialog.cancel();
+                                                                    finish();
+                                                                } else {
+                                                                    Toast.makeText(AddPaymentDetail.this, "Error! Contact Your Teacher.", Toast.LENGTH_SHORT).show();
+                                                                    successMsg.setText("Error : Contact Your Teacher.");
+                                                                    successMsg.setVisibility(View.VISIBLE);
+                                                                    alertDialog.cancel();
+                                                                }
+                                                            }
+                                                        });
+
                                             } else {
                                                 Toast.makeText(AddPaymentDetail.this, "Error! Contact Your Teacher.", Toast.LENGTH_SHORT).show();
                                                 successMsg.setText("Error : Contact Your Teacher.");
