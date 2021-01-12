@@ -27,7 +27,7 @@ public class AdminDashboard extends AppCompatActivity implements NavigationView.
 
     private FirebaseAuth firebaseAuth;
 
-    private Button checkPaymentBtn,addPaymentDetailBtn,viewReceiptBtn,addNewFeesData;
+    private Button checkPaymentBtn,addPaymentDetailBtn,viewReceiptBtn,addNewFeesData,deleteData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +43,7 @@ public class AdminDashboard extends AppCompatActivity implements NavigationView.
         addPaymentDetailBtn = findViewById(R.id.addPaymentDetailBtn);
         viewReceiptBtn = findViewById(R.id.viewReceipt);
         addNewFeesData = findViewById(R.id.addNewFeesData);
+        deleteData = findViewById(R.id.deleteData);
 
         firebaseAuth = FirebaseAuth.getInstance();
 
@@ -110,6 +111,14 @@ public class AdminDashboard extends AppCompatActivity implements NavigationView.
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(AdminDashboard.this,AddNewFeesData.class);
+                startActivity(intent);
+            }
+        });
+
+        deleteData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AdminDashboard.this,DeleteData.class);
                 startActivity(intent);
             }
         });
