@@ -65,6 +65,15 @@ public class DeleteData extends AppCompatActivity{
         classWiseClassSpinner.setAdapter(a);
         classWiseClassSpinner.setOnItemSelectedListener(new ClassWiseClass());
 
+        //Getting the instance of Spinner and applying OnItemSelectedListener on it
+        monthWiseClassSpinner = findViewById(R.id.monthWiseClassSpinner);
+        //Creating the ArrayAdapter instance having the country list
+        ArrayAdapter aaa = new ArrayAdapter(this,android.R.layout.simple_spinner_item,classesDeleteData);
+        aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        //Setting the ArrayAdapter data on the Spinner
+        monthWiseClassSpinner.setAdapter(a);
+        monthWiseClassSpinner.setOnItemSelectedListener(new MonthWiseClass());
+
 
         deleteAllClassDataBtn = findViewById(R.id.deleteDataAllBtn);
         deleteClassWiseDataBtn = findViewById(R.id.deleteDataClassBtn);
@@ -101,7 +110,59 @@ public class DeleteData extends AppCompatActivity{
             }
         });
 
+        //delete monthwise data
+        deleteMonthWiseDataBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                deleteMonthWiseData();
+            }
+        });
+
+        //delete all class data
+        deleteAllClassDataBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FirebaseDatabase.getInstance().getReference().removeValue();
+            }
+        });
+
     }
+
+    //----------------Month Wise-------------------------------------//
+
+    private void deleteMonthWiseData()
+    {
+        FirebaseDatabase.getInstance().getReference("AdminPaidStudent").child(monthWiseClassName).removeValue()
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful())
+                        {
+                            Toast.makeText(DeleteData.this, "Data Deleted!", Toast.LENGTH_SHORT).show();
+                        }else
+                        {
+                            Toast.makeText(DeleteData.this, "Data Not Deleted!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
+    class MonthWiseClass implements AdapterView.OnItemSelectedListener
+    {
+
+        @Override
+        public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+            monthWiseClassName = classesDeleteData[i];
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> adapterView) {
+
+        }
+    }
+
+
+    //----------------Class Wise-------------------------------------//
 
     private void deleteClassWiseData() {
 
@@ -111,7 +172,10 @@ public class DeleteData extends AppCompatActivity{
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful())
                         {
-                            FirebaseDatabase.getInstance().getReference("RemainingStudent");
+                            Toast.makeText(DeleteData.this, "Data Deleted!", Toast.LENGTH_SHORT).show();
+                        }else
+                        {
+                            Toast.makeText(DeleteData.this, "Data Not Deleted!", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

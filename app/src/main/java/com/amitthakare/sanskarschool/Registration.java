@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -32,6 +33,9 @@ import java.util.Map;
 public class Registration extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     private String classes[] = {"1st STD", "2nd STD", "3rd STD", "4th STD", "5th STD", "6th STD", "7th STD", "8th STD", "9th STD", "10th STD"};
+
+    private String months[] = {"January","February","March","April","May","June","July","August","September","October","November","December"};
+
     private Spinner classSpinner;
     private String className = "No";
     private EditText fullname, email, mobile, password, confirmPassword;
@@ -47,6 +51,9 @@ public class Registration extends AppCompatActivity implements AdapterView.OnIte
     //Alert Dialogue
     private AlertDialog.Builder builder;
     private AlertDialog alertDialog;
+
+    //if all data is send to firebase
+    
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,21 +142,26 @@ public class Registration extends AppCompatActivity implements AdapterView.OnIte
                                                                                         public void onComplete(@NonNull Task<Void> task) {
                                                                                             if (task.isSuccessful()) {
 
-                                                                                                FirebaseDatabase.getInstance().getReference("RemainingStudent").child(Variables.currentMonthString).child(className)
-                                                                                                        .child(firebaseAuth.getCurrentUser().getUid()).child("Name").setValue(fullname.getText().toString())
-                                                                                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                                                                            @Override
-                                                                                                            public void onComplete(@NonNull Task<Void> task) {
-                                                                                                                if (task.isSuccessful()) {
-                                                                                                                    Toast.makeText(Registration.this, "Successfully Registered!", Toast.LENGTH_SHORT).show();
-                                                                                                                    alertDialog.cancel();
-                                                                                                                    finish();
-                                                                                                                } else {
-                                                                                                                    Toast.makeText(Registration.this, "Contact your staff to check details! \n Remaining student data is not submitted!", Toast.LENGTH_SHORT).show();
-                                                                                                                    alertDialog.cancel();
+                                                                                                for (int i=0;i<12;i++)
+                                                                                                {
+                                                                                                    FirebaseDatabase.getInstance().getReference("RemainingStudent").child(months[i]).child(className)
+                                                                                                            .child(firebaseAuth.getCurrentUser().getUid()).child("Name").setValue(fullname.getText().toString())
+                                                                                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                                                                @Override
+                                                                                                                public void onComplete(@NonNull Task<Void> task) {
+                                                                                                                    if (task.isSuccessful()) {
+
+                                                                                                                    } else {
+                                                                                                                        Toast.makeText(Registration.this, "Contact your staff to check details! \n Remaining student data is not submitted!", Toast.LENGTH_SHORT).show();
+                                                                                                                        alertDialog.cancel();
+                                                                                                                    }
                                                                                                                 }
-                                                                                                            }
-                                                                                                        });
+                                                                                                            });
+                                                                                                }
+                                                                                                Toast.makeText(Registration.this, "Success!", Toast.LENGTH_SHORT).show();
+                                                                                                alertDialog.cancel();
+                                                                                                finish();
+
                                                                                             } else {
                                                                                                 Toast.makeText(Registration.this, "Contact your staff to check details! \n Realtime student data is not submitted!", Toast.LENGTH_SHORT).show();
                                                                                                 alertDialog.cancel();
