@@ -121,7 +121,7 @@ public class AddPaymentDetail extends AppCompatActivity implements AdapterView.O
             public void onClick(View v) {
                 alertDialog.show();
                 if (!classNameAddPayment.equals("No")) {
-                    if (!TextUtils.isEmpty(addDetailName.getText().toString())) {
+                    if (!TextUtils.isEmpty(addDetailName.getText().toString().toUpperCase())) {
                         if (!TextUtils.isEmpty(addDetailAmount.getText().toString())) {
                             if (!TextUtils.isEmpty(addDetailDate.getText().toString())) {
                                 if (!TextUtils.isEmpty(addDetailSubject.getText().toString())) {
@@ -189,7 +189,7 @@ public class AddPaymentDetail extends AppCompatActivity implements AdapterView.O
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         for (DataSnapshot snapshot1 : snapshot.getChildren()) {
-                            if (snapshot1.getValue().toString().equals(addDetailName.getText().toString())) {
+                            if (snapshot1.getValue().toString().equals(addDetailName.getText().toString().toUpperCase())) {
                                 alreadyPresent = true;
                                 uid = snapshot1.getKey();
                                 Log.e("Presence", "Already Present");
@@ -219,7 +219,7 @@ public class AddPaymentDetail extends AppCompatActivity implements AdapterView.O
         SimpleDateFormat dateFormat = new SimpleDateFormat("MMddyyyyHHmmss", Locale.getDefault());
         final String date1 = dateFormat.format(calendar.getTime());
 
-        userdata.put("Name", addDetailName.getText().toString());
+        userdata.put("Name", addDetailName.getText().toString().toUpperCase());
         userdata.put("Sub", "[" + addDetailSubject.getText().toString() + "]");
         userdata.put("Date", addDetailDate.getText().toString());
         userdata.put("Amount", addDetailAmount.getText().toString());
@@ -251,7 +251,7 @@ public class AddPaymentDetail extends AppCompatActivity implements AdapterView.O
         SimpleDateFormat dateFormat = new SimpleDateFormat("MMddyyyyHHmmss", Locale.getDefault());
         final String date1 = dateFormat.format(calendar.getTime());
 
-        userdata.put("Name", addDetailName.getText().toString());
+        userdata.put("Name", addDetailName.getText().toString().toUpperCase());
         userdata.put("Sub", "[" + addDetailSubject.getText().toString() + "]");
         userdata.put("Date", addDetailDate.getText().toString());
         userdata.put("Amount", addDetailAmount.getText().toString());

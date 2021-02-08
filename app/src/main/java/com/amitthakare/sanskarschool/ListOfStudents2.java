@@ -97,12 +97,14 @@ public class ListOfStudents2 extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
+                s = s.toUpperCase();
                 processSearch(s);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String s) {
+                s = s.toUpperCase();
                 processSearch(s);
                 return false;
             }

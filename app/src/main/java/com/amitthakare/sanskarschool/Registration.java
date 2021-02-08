@@ -53,7 +53,7 @@ public class Registration extends AppCompatActivity implements AdapterView.OnIte
     private AlertDialog alertDialog;
 
     //if all data is send to firebase
-    
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,7 +122,7 @@ public class Registration extends AppCompatActivity implements AdapterView.OnIte
                                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                                     if (task.isSuccessful()) {
                                                         Map<String, Object> userdata = new HashMap<>();
-                                                        userdata.put("FullName", fullname.getText().toString());
+                                                        userdata.put("FullName", fullname.getText().toString().toUpperCase());
                                                         userdata.put("EmailId", email.getText().toString());
                                                         userdata.put("MobileNo", mobile.getText().toString());
                                                         userdata.put("Class", className);
@@ -136,7 +136,7 @@ public class Registration extends AppCompatActivity implements AdapterView.OnIte
                                                                     public void onComplete(@NonNull Task<Void> task) {
                                                                         if (task.isSuccessful()) {
                                                                             DatabaseReference myRef = realtimeDatabase.getReference("StudentInfo").child(className).child(firebaseAuth.getCurrentUser().getUid());
-                                                                            myRef.setValue(fullname.getText().toString())
+                                                                            myRef.setValue(fullname.getText().toString().toUpperCase())
                                                                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                                         @Override
                                                                                         public void onComplete(@NonNull Task<Void> task) {
@@ -145,7 +145,7 @@ public class Registration extends AppCompatActivity implements AdapterView.OnIte
                                                                                                 for (int i=0;i<12;i++)
                                                                                                 {
                                                                                                     FirebaseDatabase.getInstance().getReference("RemainingStudent").child(months[i]).child(className)
-                                                                                                            .child(firebaseAuth.getCurrentUser().getUid()).child("Name").setValue(fullname.getText().toString())
+                                                                                                            .child(firebaseAuth.getCurrentUser().getUid()).child("Name").setValue(fullname.getText().toString().toUpperCase())
                                                                                                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                                                                 @Override
                                                                                                                 public void onComplete(@NonNull Task<Void> task) {

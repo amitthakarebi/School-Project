@@ -394,7 +394,7 @@ public class UpiPayment extends AppCompatActivity {
         final String date1 = dateFormat.format(calendar.getTime());
 
 
-        userdata.put("Name", upiName.getText().toString());
+        userdata.put("Name", upiName.getText().toString().toUpperCase());
         userdata.put("Sub", "[" + subjects.toString() + "]");
         userdata.put("Date", date);
         userdata.put("Amount", upiAmount.getText().toString());
