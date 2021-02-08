@@ -11,6 +11,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.telephony.SmsManager;
@@ -81,6 +83,8 @@ public class UpiPayment extends AppCompatActivity {
     private TextView msg;
     private Uri uri; // it is use for location of the particular content in this case the Google Pay address
     private static  String PAYERNAME, UPIID, MSGNOTE, SENDAMOUNT, STATUS;
+    String TAG ="main";
+    final int UPI_PAYMENT = 0;
 
 
     private FirebaseAuth firebaseAuth;
@@ -245,9 +249,11 @@ public class UpiPayment extends AppCompatActivity {
 
             if (!PAYERNAME.equals("") && !UPIID.equals("") && !MSGNOTE.equals("") && !SENDAMOUNT.equals(""))
             {
-                uri =getUpiUri(PAYERNAME,UPIID,MSGNOTE,SENDAMOUNT);
+                //uri =getUpiUri(PAYERNAME,UPIID,MSGNOTE,SENDAMOUNT);
                 //payWithGpay(GPAY_PACKAGE_NAME);
-                sendDataToFirebaseDatabase();
+                //sendDataToFirebaseDatabase();
+
+                payUsingUpi(upiName.getText().toString(), upiId.getText().toString(), upiTransactionNote.getText().toString(), upiAmount.getText().toString());
             }
 
         }else
@@ -257,70 +263,128 @@ public class UpiPayment extends AppCompatActivity {
 
     }
 
-    private void payWithGpay(String gpayPackageName) {
 
-        if(isAppInstalled(this,gpayPackageName)) // herre we called the isAppInstalled method which checks the google pay is available on the device or not.
-        {
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(uri); // here we set the uri means google pay app location into uri so that the intent will call the google pay app
-            intent.setPackage(gpayPackageName);
-            startActivityForResult(intent,0); // here we send the intent to result activity with request code so that we differentiate the result.
-        }else
-        {
-            Toast.makeText(UpiPayment.this,"Google Pay is not installed. Please install and try again.",Toast.LENGTH_LONG).show();
-        }
 
-    }
 
-    private Uri getUpiUri(String payername, String upiid, String msgnote, String sendamount) {
-
-        return new Uri.Builder()
-                .scheme("upi")
-                .authority("pay")
-                .appendQueryParameter("pa",upiid)
-                .appendQueryParameter("pn",payername)
-                .appendQueryParameter("tn",msgnote)
-                .appendQueryParameter("am",sendamount)
-                .appendQueryParameter("cu","INR")
+    void payUsingUpi(  String name,String upiId, String note, String amount) {
+        Log.e("main ", "name "+name +"--up--"+upiId+"--"+ note+"--"+amount);
+        Uri uri = Uri.parse("upi://pay").buildUpon()
+                .appendQueryParameter("pa", upiId)
+                .appendQueryParameter("pn", name)
+                .appendQueryParameter("mc", "")
+                //.appendQueryParameter("tid", "02125412")
+                .appendQueryParameter("tr", "25584786")
+                .appendQueryParameter("tn", note)
+                .appendQueryParameter("am", amount)
+                .appendQueryParameter("cu", "INR")
+                //.appendQueryParameter("refUrl", "blueapp")
                 .build();
-
-    }
-
-    public static boolean isAppInstalled(Context context, String packageName) { // it will check if app is install or not
-        try{
-            context.getPackageManager().getApplicationInfo(packageName,0);
-            return true;
-        }catch(PackageManager.NameNotFoundException e)
-        {
-            return false;
+        Intent upiPayIntent = new Intent(Intent.ACTION_VIEW);
+        upiPayIntent.setData(uri);
+        // will always show a dialog to user to choose an app
+        Intent chooser = Intent.createChooser(upiPayIntent, "Pay with");
+        // check if intent resolves
+        if(null != chooser.resolveActivity(getPackageManager())) {
+            startActivityForResult(chooser, UPI_PAYMENT);
+        } else {
+            Toast.makeText(UpiPayment.this,"No UPI app found, please install one to continue",Toast.LENGTH_SHORT).show();
         }
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (data!=null)
-        {
-            STATUS =data.getStringExtra("Status");
+        Log.e("main ", "response "+resultCode );
+        /*
+       E/main: response -1
+       E/UPI: onActivityResult: txnId=AXI4a3428ee58654a938811812c72c0df45&responseCode=00&Status=SUCCESS&txnRef=922118921612
+       E/UPIPAY: upiPaymentDataOperation: txnId=AXI4a3428ee58654a938811812c72c0df45&responseCode=00&Status=SUCCESS&txnRef=922118921612
+       E/UPI: payment successfull: 922118921612
+         */
+        switch (requestCode) {
+            case UPI_PAYMENT:
+                if ((RESULT_OK == resultCode) || (resultCode == 11)) {
+                    if (data != null) {
+                        String trxt = data.getStringExtra("response");
+                        Log.e("UPI", "onActivityResult: " + trxt);
+                        ArrayList<String> dataList = new ArrayList<>();
+                        dataList.add(trxt);
+                        upiPaymentDataOperation(dataList);
+                    } else {
+                        Log.e("UPI", "onActivityResult: " + "Return data is null");
+                        ArrayList<String> dataList = new ArrayList<>();
+                        dataList.add("nothing");
+                        upiPaymentDataOperation(dataList);
+                    }
+                } else {
+                    //when user simply back without payment
+                    Log.e("UPI", "onActivityResult: " + "Return data is null");
+                    ArrayList<String> dataList = new ArrayList<>();
+                    dataList.add("nothing");
+                    upiPaymentDataOperation(dataList);
+                }
+                break;
         }
 
-        if (RESULT_OK == resultCode && STATUS.equals("SUCCESS"))
-        {
+    }
 
-            // here we need to check if user has already registered any courses and for that we need to check if already present method
-            // after that retrieve date from firebase and store in the variable
-            // after that call to send data to firebase method with all parameters
-            // and if user has not subscribe any subject then it will directly get called to simple method and data will be registered.
-            //Toast.makeText(UpiPayment.this, "Transaction Successful.", Toast.LENGTH_SHORT).show();
-            alertDialog.show();
-           sendDataToFirebaseDatabase();
-
-        }else
-        {
-            Toast.makeText(UpiPayment.this, "Transaction cancelled or failed please try again.", Toast.LENGTH_SHORT).show();
+    private void upiPaymentDataOperation(ArrayList<String> data) {
+        if (isConnectionAvailable(UpiPayment.this)) {
+            String str = data.get(0);
+            Log.e("UPIPAY", "upiPaymentDataOperation: "+str);
+            String paymentCancel = "";
+            if(str == null) str = "discard";
+            String status = "";
+            String approvalRefNo = "";
+            String response[] = str.split("&");
+            for (int i = 0; i < response.length; i++) {
+                String equalStr[] = response[i].split("=");
+                if(equalStr.length >= 2) {
+                    if (equalStr[0].toLowerCase().equals("Status".toLowerCase())) {
+                        status = equalStr[1].toLowerCase();
+                    }
+                    else if (equalStr[0].toLowerCase().equals("ApprovalRefNo".toLowerCase()) || equalStr[0].toLowerCase().equals("txnRef".toLowerCase())) {
+                        approvalRefNo = equalStr[1];
+                    }
+                }
+                else {
+                    paymentCancel = "Payment cancelled by user.";
+                }
+            }
+            if (status.equals("success")) {
+                //Code to handle successful transaction here.
+                //Toast.makeText(UpiPayment.this, "Transaction successful.", Toast.LENGTH_SHORT).show();
+                alertDialog.show();
+                sendDataToFirebaseDatabase();
+                Log.e("UPI", "payment successfull: "+approvalRefNo);
+            }
+            else if("Payment cancelled by user.".equals(paymentCancel)) {
+                Toast.makeText(UpiPayment.this, "Payment cancelled by user.", Toast.LENGTH_SHORT).show();
+                Log.e("UPI", "Cancelled by user: "+approvalRefNo);
+            }
+            else {
+                Toast.makeText(UpiPayment.this, "Transaction failed.Please try again", Toast.LENGTH_SHORT).show();
+                Log.e("UPI", "failed payment: "+approvalRefNo);
+            }
+        } else {
+            Log.e("UPI", "Internet issue: ");
+            Toast.makeText(UpiPayment.this, "Internet connection is not available. Please check and try again", Toast.LENGTH_SHORT).show();
         }
+    }
 
+    public static boolean isConnectionAvailable(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager != null) {
+            NetworkInfo netInfo = connectivityManager.getActiveNetworkInfo();
+            if (netInfo != null && netInfo.isConnected()
+                    && netInfo.isConnectedOrConnecting()
+                    && netInfo.isAvailable()) {
+                return true;
+            }
+        }
+        return false;
     }
 
 
@@ -354,7 +418,7 @@ public class UpiPayment extends AppCompatActivity {
                                                             public void onComplete(@NonNull Task<Void> task) {
                                                                 if (task.isSuccessful())
                                                                 {
-                                                                    Toast.makeText(UpiPayment.this, "Success!", Toast.LENGTH_SHORT).show();
+                                                                    Toast.makeText(UpiPayment.this, "Payment Successful!", Toast.LENGTH_SHORT).show();
                                                                     sendSmS(upiName.getText().toString(),subjects.toString(),date,upiAmount.getText().toString());
                                                                     msg.setText("Successfully Added!");
                                                                     msg.setVisibility(View.VISIBLE);

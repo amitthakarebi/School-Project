@@ -97,11 +97,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginStart="15dp"
+                android:text="9423133133@okbizaxis"
                 android:layout_marginTop="15dp"
                 android:layout_marginEnd="15dp"
                 android:background="@drawable/edittext_background"
                 android:hint="School Upi ID"
                 android:paddingStart="20dp"
+                android:clickable="false"
+                android:cursorVisible="false"
+                android:focusable="false"
                 android:paddingEnd="20dp"
                 android:textColor="@color/black" />
 
