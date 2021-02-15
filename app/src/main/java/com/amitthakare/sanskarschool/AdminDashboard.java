@@ -81,7 +81,7 @@ public class AdminDashboard extends AppCompatActivity implements NavigationView.
         navigationViewAdmin.bringToFront();
         navigationViewAdmin.setNavigationItemSelectedListener(this);
 
-        navigationViewAdmin.setCheckedItem(R.id.nav_home);
+        navigationViewAdmin.setCheckedItem(R.id.nav_home_admin);
 
         checkPaymentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
