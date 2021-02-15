@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -21,6 +22,8 @@ import com.google.firebase.database.FirebaseDatabase;
 public class AdminLogin extends AppCompatActivity {
 
     private FirebaseAuth firebaseAuth;
+
+    private TextView loginForgotPasswordAdmin;
 
     private EditText adminEmail, adminPassword;
     private Button adminSigninBtn;
@@ -43,6 +46,7 @@ public class AdminLogin extends AppCompatActivity {
         adminEmail = findViewById(R.id.loginAdminEmail);
         adminPassword = findViewById(R.id.loginAdminPassword);
         adminSigninBtn = findViewById(R.id.loginAdminBtn);
+        loginForgotPasswordAdmin = findViewById(R.id.loginForgotPasswordAdmin);
 
         adminSigninBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,6 +73,14 @@ public class AdminLogin extends AppCompatActivity {
                                 }
                             });
                 }
+            }
+        });
+
+        loginForgotPasswordAdmin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(AdminLogin.this,ResetPassword.class);
+                startActivity(intent);
             }
         });
 

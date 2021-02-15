@@ -15,13 +15,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -35,6 +35,7 @@ public class Login extends AppCompatActivity {
 
     private Button newwStudentRegistrationBtn, loginStudentBtn,teachersLogin;
     private EditText loginStudentEmail, loginStudentPassword;
+    private TextView loginForgetPassword;
 
     private AlertDialog.Builder builder;
     private AlertDialog alertDialog;
@@ -44,6 +45,7 @@ public class Login extends AppCompatActivity {
     private Calendar calendar;
     private SimpleDateFormat simpleDateFormat;
     private String date;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,6 +115,7 @@ public class Login extends AppCompatActivity {
     }
 
     private void ini() {
+        loginForgetPassword = findViewById(R.id.loginForgotPasswordAdmin);
         newwStudentRegistrationBtn = findViewById(R.id.studentRegistrationMainBtn);
         loginStudentBtn = findViewById(R.id.loginStudentBtn);
         loginStudentEmail = findViewById(R.id.loginStudentEmail);
@@ -155,6 +158,14 @@ public class Login extends AppCompatActivity {
                                 }
                             }
                         });
+            }
+        });
+
+        loginForgetPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Login.this,ResetPassword.class);
+                startActivity(intent);
             }
         });
     }
