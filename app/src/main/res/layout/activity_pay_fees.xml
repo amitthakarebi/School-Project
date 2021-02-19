@@ -47,7 +47,7 @@
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/pay_fees_logo" />
+                        android:src="@drawable/googlepay_icon" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -79,7 +79,7 @@
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/paid_fees_logo" />
+                        android:src="@drawable/phonepe_icon" />
 
                     <TextView
                         android:layout_width="wrap_content"
