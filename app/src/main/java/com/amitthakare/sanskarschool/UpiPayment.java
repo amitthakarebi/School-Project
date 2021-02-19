@@ -29,6 +29,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -165,13 +166,13 @@ public class UpiPayment extends AppCompatActivity {
                     subjects.add("English");
                     totalAmount += engAmt;
                     upiAmount.setText(totalAmount+"");
-                    Toast.makeText(UpiPayment.this, "Rs. "+engAmt+" is added for English subject.", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(findViewById(R.id.drawerLayoutUPIPayment),"Rs. "+engAmt+" is added for English subject.",Snackbar.LENGTH_LONG).show();
                 }else
                 {
                     subjects.remove("English");
                     totalAmount-= engAmt;
                     upiAmount.setText(totalAmount+"");
-                    Toast.makeText(UpiPayment.this, "Rs. "+engAmt+" is removed for English subject.", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(findViewById(R.id.drawerLayoutUPIPayment),"Rs. "+engAmt+" is removed for English subject.",Snackbar.LENGTH_LONG).show();
                 }
             }
         });
@@ -185,13 +186,13 @@ public class UpiPayment extends AppCompatActivity {
                     subjects.add("Mathematics");
                     totalAmount += mathsAmt;
                     upiAmount.setText(totalAmount+"");
-                    Toast.makeText(UpiPayment.this, "Rs. "+mathsAmt+" is added for Mathematics subject.", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(findViewById(R.id.drawerLayoutUPIPayment),"Rs. "+mathsAmt+" is added for Mathematics subject.",Snackbar.LENGTH_LONG).show();
                 }else
                 {
                     subjects.remove("Mathematics");
                     totalAmount-= mathsAmt;
                     upiAmount.setText(totalAmount+"");
-                    Toast.makeText(UpiPayment.this, "Rs. "+mathsAmt+" is removed for Mathematics subject.", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(findViewById(R.id.drawerLayoutUPIPayment),"Rs. "+mathsAmt+" is removed for Mathematics subject.",Snackbar.LENGTH_LONG).show();
                 }
             }
         });
@@ -205,13 +206,13 @@ public class UpiPayment extends AppCompatActivity {
                     subjects.add("Science");
                     totalAmount += sciAmt;
                     upiAmount.setText(totalAmount+"");
-                    Toast.makeText(UpiPayment.this, "Rs. "+sciAmt+" is added for Science subject.", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(findViewById(R.id.drawerLayoutUPIPayment),"Rs. "+sciAmt+" is added for Science subject.",Snackbar.LENGTH_LONG).show();
                 }else
                 {
                     subjects.remove("Science");
                     totalAmount-= sciAmt;
                     upiAmount.setText(totalAmount+"");
-                    Toast.makeText(UpiPayment.this, "Rs. "+sciAmt+" is removed for Science subject.", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(findViewById(R.id.drawerLayoutUPIPayment),"Rs. "+sciAmt+" is removed for Science subject.",Snackbar.LENGTH_LONG).show();
                 }
             }
         });
